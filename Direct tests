@@ -1,0 +1,59 @@
+# tests/direct/test_create_case.py
+
+from genlayer_pytest import direct_deploy, direct_vm
+
+
+def test_create_case():
+    contract = direct_deploy(
+        "contracts/evidence_adjudicator.py"
+    )
+
+    contract.create_case(
+        "case-1",
+        "Does the source support feature X?",
+        "https://example.com",
+        "The source must explicitly support feature X.",
+    )
+
+    result = contract.get_case("case-1")
+
+    assert result["case_id"] == "case-1"
+    assert result["status"] == "PENDING"
+    assert result["decision"] == ""
+
+
+def test_duplicate_case_reverts():
+    contract = direct_deploy(
+        "contracts/evidence_adjudicator.py"
+    )
+
+    contract.create_case(
+        "case-1",
+        "Question",
+        "https://example.com",
+        "Criteria",
+    )
+
+    with direct_vm.expect_revert("Case already exists"):
+        contract.create_case(
+            "case-1",
+            "Question",
+            "https://example.com",
+            "Criteria",
+        )
+
+
+def test_invalid_url_reverts():
+    contract = direct_deploy(
+        "contracts/evidence_adjudicator.py"
+    )
+
+    with direct_vm.expect_revert(
+        "Source must use HTTPS"
+    ):
+        contract.create_case(
+            "case-2",
+            "Question",
+            "http://example.com",
+            "Criteria",
+        )
