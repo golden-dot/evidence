@@ -1,0 +1,29 @@
+# tests/integration/test_evidence_adjudicator.py
+
+import pytest
+
+
+@pytest.mark.integration
+def test_full_resolution(evidence_verifier):
+
+    evidence_verifier.create_case(
+        "studio-1",
+        "Does the source contain evidence supporting the stated requirement?",
+        "https://docs.genlayer.com/",
+        "The source must contain relevant evidence for the requirement.",
+    )
+
+    before = evidence_verifier.get_case("studio-1")
+
+    assert before["status"] == "PENDING"
+
+    evidence_verifier.resolve_case("studio-1")
+
+    after = evidence_verifier.get_case("studio-1")
+
+    assert after["status"] == "RESOLVED"
+    assert after["decision"] in (
+        "SUPPORTED",
+        "REFUTED",
+        "INCONCLUSIVE",
+    )
