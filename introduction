@@ -1,0 +1,28 @@
+## Evidence Adjudicator
+
+Evidence Adjudicator is a reusable GenLayer Intelligent Contract primitive for consensus-backed verification of claims against live public web sources.
+
+A caller submits a question, a source URL, and explicit verification criteria. The contract then uses GenLayer nondeterministic execution to retrieve and evaluate the source.
+
+The important part is the consensus mechanism.
+
+The leader independently performs the evidence evaluation. Validators independently retrieve and evaluate the same source rather than simply checking the leader's output format. The contract compares consensus-critical semantic fields — the decision, source relevance, and whether relevant evidence was found.
+
+Natural-language explanation text is stored as evidence but is not required to match across validators.
+
+This makes the contract useful beyond a single demo. Other builders can use the same primitive for documentation verification, policy compliance checks, public announcement verification, and other workflows where deterministic contracts need a consensus-backed interpretation of live external evidence.
+
+The contract includes:
+
+* explicit case state and lifecycle;
+* HTTPS source validation;
+* duplicate and invalid-input protection;
+* structured nondeterministic execution;
+* independent validator verification;
+* semantic equivalence checks;
+* persistent evidence and decision state;
+* direct tests;
+* GenLayer Studio integration testing;
+* documentation explaining the consensus model and reuse pattern.
+
+The goal is not to replace an oracle with an LLM. The goal is to provide a reusable contract-level mechanism for reaching consensus over externally sourced evidence.
